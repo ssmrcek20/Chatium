@@ -1,3 +1,4 @@
+import ssl
 from threading import Thread
 import customtkinter as ctk
 import asyncio
@@ -27,7 +28,7 @@ class ContactsPage(ctk.CTkFrame):
         self.token = token
         self.loop = loop
         self.selected_contact = None
-        self.sio = socketio.Client()
+        self.sio = socketio.Client(ssl_verify=False)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=10)
         self.grid_columnconfigure(2, weight=1)
@@ -59,7 +60,7 @@ class ContactsPage(ctk.CTkFrame):
 
     async def fetch_contacts(self):
         async with aiohttp.ClientSession() as session:
-            async with session.get("http://localhost:5000/chats", headers={"Authorization": f"Bearer {self.token}"}) as response:
+            async with session.get("https://localhost:5000/chats", ssl=False, headers={"Authorization": f"Bearer {self.token}"}) as response:
                 if response.status == 200:
                     return await response.json()
                 else:
@@ -83,7 +84,7 @@ class ContactsPage(ctk.CTkFrame):
 
     async def fetch_chat(self, username):
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"http://localhost:5000/chats?user={username}", headers={"Authorization": f"Bearer {self.token}"}) as response:
+            async with session.get(f"https://localhost:5000/chats?user={username}", ssl=False, headers={"Authorization": f"Bearer {self.token}"}) as response:
                 if response.status == 200:
                     return await response.json()
                 else:
@@ -119,7 +120,7 @@ class ContactsPage(ctk.CTkFrame):
 
     async def send_message_request(self, data):
         async with aiohttp.ClientSession() as session:
-            async with session.post("http://localhost:5000/send_message", json=data, headers={"Authorization": f"Bearer {self.token}"}) as response:
+            async with session.post("https://localhost:5000/send_message", json=data, ssl=False, headers={"Authorization": f"Bearer {self.token}"}) as response:
                 return response.status
 
     def send_message(self):
@@ -156,7 +157,7 @@ class ContactsPage(ctk.CTkFrame):
 
     def start_socketio(self, username):
         try:
-            self.sio.connect('http://localhost:5000', headers={"Authorization": f"Bearer {self.token}"})
+            self.sio.connect('wss://localhost:5000', headers={"Authorization": f"Bearer {self.token}"})
             self.sio.emit('join_chat', {'target_user': self.username})
         except socketio.exceptions.ConnectionError as e:
             print("Connection error:", e)

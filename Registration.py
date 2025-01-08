@@ -36,7 +36,7 @@ class RegistrationPage(ctk.CTkFrame):
 
     async def register_request(self, data):
         async with aiohttp.ClientSession() as session:
-            async with session.post("http://localhost:5000/register", json=data) as response:
+            async with session.post("https://localhost:5000/register", json=data, ssl=False) as response:
                 return response.status
 
     def register(self):
@@ -54,7 +54,7 @@ class RegistrationPage(ctk.CTkFrame):
 
     async def _perform_registration(self, data):
         status = await self.register_request(data)
-        if status == 201:
+        if (status == 201):
             self.message_label.configure(text="Registration successful", text_color="green")
             self.message_label.grid()
             self.switch_to_login()

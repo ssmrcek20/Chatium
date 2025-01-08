@@ -1,3 +1,4 @@
+import ssl
 import customtkinter as ctk
 import asyncio
 import aiohttp
@@ -29,7 +30,7 @@ class LoginPage(ctk.CTkFrame):
 
     async def login_request(self, data):
         async with aiohttp.ClientSession() as session:
-            async with session.post("http://localhost:5000/login", json=data) as response:
+            async with session.post("https://localhost:5000/login", json=data, ssl=False) as response:
                 if response.status == 200:
                     return await response.json()
                 else:

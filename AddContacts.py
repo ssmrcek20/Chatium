@@ -26,7 +26,7 @@ class AddContactFrame(ctk.CTkFrame):
 
     async def add_contact_request(self, data):
         async with aiohttp.ClientSession() as session:
-            async with session.post("http://localhost:5000/addchat", json=data, headers={"Authorization": f"Bearer {self.token}"}) as response:
+            async with session.post("https://localhost:5000/addchat", json=data, ssl=False, headers={"Authorization": f"Bearer {self.token}"}) as response:
                 return response.status
 
     def add_contact(self):
