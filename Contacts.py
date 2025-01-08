@@ -1,4 +1,3 @@
-import ssl
 from threading import Thread
 import customtkinter as ctk
 import asyncio

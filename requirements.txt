@@ -1,0 +1,4 @@
+customtkinter
+asyncio
+aiohttp
+Flask-socketio

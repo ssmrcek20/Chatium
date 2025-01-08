@@ -1,4 +1,3 @@
-import ssl
 import customtkinter as ctk
 import asyncio
 import aiohttp
